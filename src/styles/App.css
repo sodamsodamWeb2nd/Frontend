@@ -1,0 +1,18 @@
+body,
+html,
+#root {
+  height: 100%;
+  margin: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.map-area {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
