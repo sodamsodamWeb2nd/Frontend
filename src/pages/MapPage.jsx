@@ -1,33 +1,79 @@
-import React, { useEffect } from 'react';
-import '../styles/MapPage.css';
+import React, { useEffect, useState } from 'react';
 
 function MapPage() {
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAO_MAP_API_KEY}&autoload=false`;
-    document.head.appendChild(script);
+  const [mapError, setMapError] = useState(null);
 
-    script.onload = () => {
-      window.kakao.maps.load(() => {
-        const container = document.getElementById('map');
-        const options = {
-          center: new window.kakao.maps.LatLng(37.5665, 126.978), // 서울 시청
-          level: 3,
-        };
-        new window.kakao.maps.Map(container, options);
+  useEffect(() => {
+    const waitForKakao = () => {
+      return new Promise((resolve, reject) => {
+        if (window.kakao && window.kakao.maps) {
+          resolve();
+          return;
+        }
+
+        const maxWaitTime = 10000;
+        const interval = 100;
+        let waited = 0;
+
+        const checker = setInterval(() => {
+          if (window.kakao && window.kakao.maps) {
+            clearInterval(checker);
+            resolve();
+            return;
+          }
+
+          waited += interval;
+          if (waited >= maxWaitTime) {
+            clearInterval(checker);
+            reject(new Error('카카오맵 API 로드 시간 초과'));
+          }
+        }, interval);
       });
     };
 
-    return () => {
-      document.head.removeChild(script);
+    const initMap = async () => {
+      try {
+        await waitForKakao();
+
+        await new Promise((resolve, reject) => {
+          window.kakao.maps.load(() => {
+            try {
+              const container = document.getElementById('map');
+              const options = {
+                center: new window.kakao.maps.LatLng(36.851558, 127.151092), // 공주대학교 천안공과대학 좌표
+                level: 3,
+              };
+              const map = new window.kakao.maps.Map(container, options);
+
+              const marker = new window.kakao.maps.Marker({
+                position: options.center,
+              });
+
+              marker.setMap(map);
+
+              resolve(map);
+            } catch (error) {
+              reject(error);
+            }
+          });
+        });
+      } catch (error) {
+        console.error('카카오맵 초기화 중 오류:', error.message);
+        setMapError(error.message);
+      }
     };
+
+    initMap();
   }, []);
 
   return (
     <div className="map-page">
       <div id="map" className="map-container">
-        {/* 카카오맵이 여기에 렌더링됩니다 */}
+        {mapError && (
+          <div style={{ padding: '20px', color: 'red', textAlign: 'center' }}>
+            {mapError}
+          </div>
+        )}
       </div>
     </div>
   );
