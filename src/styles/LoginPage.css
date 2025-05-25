@@ -1,0 +1,113 @@
+/* 공통 스타일 */
+.login-page {
+  width: 100%;
+  padding: 2rem;
+  background-color: white;
+  box-sizing: border-box;
+}
+
+.login-message {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.login-message h2 {
+  color: #333;
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.kakao-btn {
+  background-color: #fee500;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  color: #000000;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.kakao-btn:hover {
+  background-color: #fdd835;
+}
+
+.kakao-login-btn {
+  display: block;
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  margin: 0 auto;
+  max-width: 200px;
+  margin-top: 1.5rem;
+}
+
+.kakao-login-form {
+  width: 100%;
+}
+
+.kakao-logo {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #000000;
+}
+
+.kakao-login-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  width: 100%;
+}
+
+.kakao-login-form input[type='text'],
+.kakao-login-form input[type='password'] {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.kakao-login-form input:focus {
+  border-color: #fee500;
+}
+
+.error-message {
+  color: #e65f3e;
+  font-size: 0.75rem;
+  margin-top: 0.2rem;
+}
+
+.login-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.login-checkbox input[type='checkbox'] {
+  margin: 0;
+}
+
+.kakao-submit-btn {
+  width: 100%;
+  padding: 0.6rem;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}

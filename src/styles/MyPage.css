@@ -1,0 +1,99 @@
+.my-page {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: hidden;
+  margin: 0 auto;
+}
+
+.my-page-profile {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.my-page-profile-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #6c38ff;
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  overflow: hidden;
+}
+
+.my-page-profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.my-page-profile span {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.my-page-profile-edit {
+  margin-left: auto;
+}
+
+.my-page-profile-edit button {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #666;
+  font-size: 1.2rem;
+  transition: color 0.2s ease;
+}
+
+.my-page-profile-edit button:hover {
+  color: #6c38ff;
+}
+
+.my-page-list {
+  padding: 0;
+  margin: 20px 0 0 0;
+  list-style: none;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.my-page-list-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.my-page-list-item:last-child {
+  border-bottom: none;
+}
+
+.my-page-list-item:hover {
+  background-color: #f8f9fa;
+}
+
+.my-page-list-item span {
+  flex-grow: 1;
+  color: #333;
+  font-size: 1rem;
+}
+
+.my-page-list-item::after {
+  content: '>';
+  color: #999;
+  margin-left: 10px;
+}

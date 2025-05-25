@@ -2,8 +2,8 @@ const express = import ('express');
 const axios = import ('axios');
 const router = express.Router();
 
-const REST_API_KEY = '발급받은_앱키';
-const REDIRECT_URI = 'http://localhost:3000/oauth/kakao/callback';
+const REST_API_KEY = '64be66bae7cf607109010e012715b3e6';
+const REDIRECT_URI = 'http://localhost:5173/oauth/kakao/callback';
 
 router.get('/oauth/kakao', async (req, res) => {
   const { code } = req.query;
