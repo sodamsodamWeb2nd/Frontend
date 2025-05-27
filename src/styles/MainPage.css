@@ -1,0 +1,131 @@
+.main-page {
+  width: 100%;
+  height: calc(100% - 150px);
+  background-color: #fff;
+  padding: 0;
+  overflow-y: auto;
+  margin: 0 auto;
+  position: relative;
+  box-sizing: border-box;
+  scrollbar-gutter: stable;
+}
+
+.main-page::-webkit-scrollbar {
+  width: 6px;
+}
+
+.main-page:hover::-webkit-scrollbar {
+  width: 6px;
+}
+
+.main-page:hover::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.main-page:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px 10px 10px 16px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.sort-dropdown {
+  position: relative;
+}
+
+.sort-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  outline: none;
+}
+
+.sort-select:focus {
+  border-color: #007bff;
+}
+
+.place-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 10px 0 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.place-card {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  cursor: pointer;
+  padding-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.place-image {
+  width: 100%;
+  height: 200px;
+  margin-bottom: 12px;
+}
+
+.place-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #e0e0e0;
+}
+
+.place-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.place-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.place-name {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+.place-description {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.review-info {
+  font-size: 14px;
+  color: #888;
+  font-weight: 500;
+}

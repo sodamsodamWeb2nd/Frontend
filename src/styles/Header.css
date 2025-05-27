@@ -3,7 +3,7 @@
   position: fixed;
   flex-direction: column;
   align-items: center;
-  width: 450px;
+  width: 470px;
   height: 150px;
   background-color: #0048ff;
   padding: 1.5rem;
@@ -31,16 +31,18 @@
 
 .search-wrapper {
   position: relative;
-  width: 100%;
+  width: 77%;
   background: white;
   border-radius: 4px;
   display: flex;
   align-items: center;
   padding-right: 1rem;
+  margin: 0 auto;
 }
 
 .header__search {
   flex: 1;
+  position: center;
   border: none;
   outline: none;
   padding: 0.5rem 1rem;

@@ -1,14 +1,100 @@
-import React from 'react';
+import React, { useState } from 'react';
+import '../styles/MainPage.css';
+import HeartButton from '../components/common/HeartButton';
 
-function MainPage() {
+const MainPage = () => {
+  const [places, setPlaces] = useState([
+    {
+      id: 1,
+      name: '스타벅스',
+      description: '여기는 설명을 적는 곳입니다.',
+      reviewCount: 6,
+      averagePrice: 10000,
+      image: null,
+      isLiked: false,
+    },
+    {
+      id: 2,
+      name: '스타벅스',
+      description: '여기는 설명을 적는 곳입니다.',
+      reviewCount: 6,
+      averagePrice: 10000,
+      image: null,
+      isLiked: false,
+    },
+    {
+      id: 3,
+      name: '스타벅스',
+      description: '여기는 설명을 적는 곳입니다.',
+      reviewCount: 6,
+      averagePrice: 10000,
+      image: null,
+      isLiked: false,
+    },
+  ]);
+
+  const [sortOption, setSortOption] = useState('조회순');
+
+  const toggleLike = id => {
+    setPlaces(
+      places.map(place =>
+        place.id === id ? { ...place, isLiked: !place.isLiked } : place,
+      ),
+    );
+  };
+
+  const formatPrice = price => {
+    return price.toLocaleString();
+  };
+
   return (
     <div className="main-page">
-      <h1>지도 홈</h1>
-      <div className="main-info">
-        <p>지도 홈 정보가 여기에 표시됩니다.</p>
+      <div className="main-header">
+        <h1 className="page-title">천안 신부동</h1>
+        <div className="sort-dropdown">
+          <select
+            value={sortOption}
+            onChange={e => setSortOption(e.target.value)}
+            className="sort-select"
+          >
+            <option value="조회순">조회순</option>
+            <option value="평점순">평점순</option>
+            <option value="가격순">가격순</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="place-list">
+        {places.map(place => (
+          <div key={place.id} className="place-card">
+            <div className="place-image">
+              {place.image ? (
+                <img src={place.image} alt={place.name} />
+              ) : (
+                <div className="image-placeholder" />
+              )}
+            </div>
+            <div className="place-info">
+              <div className="place-header">
+                <h2 className="place-name">{place.name}</h2>
+                <HeartButton
+                  isLiked={place.isLiked}
+                  onClick={() => toggleLike(place.id)}
+                />
+              </div>
+              <p className="place-description">{place.description}</p>
+              <div className="place-meta">
+                <span className="review-info">
+                  리뷰 {place.reviewCount}개 | 평균{' '}
+                  {formatPrice(place.averagePrice)}원
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
-}
+};
 
 export default MainPage;

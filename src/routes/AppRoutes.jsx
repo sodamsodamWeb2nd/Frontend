@@ -2,10 +2,9 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Footer from '../components/common/Footer';
 import MainLayout from '../components/layout/MainLayout';
-import MapPage from '../pages/MapPage';
 import MainPage from '../pages/MainPage';
+import LikedPlacePage from '../pages/LikedPlacePage';
 import ReviewPage from '../pages/ReviewPage';
-import WishlistPage from '../pages/WishlistPage';
 import ReservationPage from '../pages/ReservationPage';
 import MyPage from '../pages/MyPage';
 import LoginPage from '../pages/LoginPage';
@@ -41,10 +40,10 @@ const AppRoutes = () => (
           }
         />
         <Route
-          path="wishlist"
+          path="likedPlace"
           element={
             <PrivateRoute>
-              <WishlistPage />
+              <LikedPlacePage />
             </PrivateRoute>
           }
         />

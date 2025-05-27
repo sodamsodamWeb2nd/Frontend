@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import MapPage from '../../pages/MapPage';
+import Map from '../layout/Map';
 import '../../styles/MainLayout.css';
 
 const MainLayout = () => {
@@ -11,7 +11,7 @@ const MainLayout = () => {
       <div className="main-layout">
         <Sidebar />
         <div className="map-container">
-          <MapPage />
+          <Map />
         </div>
       </div>
     </>

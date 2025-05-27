@@ -1,0 +1,20 @@
+.heart-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.heart-button:hover {
+  transform: scale(1.1);
+}
+
+.heart-button img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}

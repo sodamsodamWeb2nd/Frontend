@@ -4,7 +4,7 @@ import '../../styles/Sidebar.css';
 
 const menuItems = [
   { type: 'main', label: '지도 홈', path: '/main' },
-  { type: 'wishlist', label: '찜한 장소', path: '/wishlist' },
+  { type: 'likedPlace', label: '찜한 장소', path: '/likedPlace' },
   { type: 'reservation', label: '나의 예약', path: '/reservation' },
   { type: 'review', label: '리뷰 작성', path: '/review' },
   { type: 'mypage', label: '내 프로필', path: '/mypage' },

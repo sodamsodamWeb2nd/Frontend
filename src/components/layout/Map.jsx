@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/MainLayout.css';
+import '../../styles/MainLayout.css';
 
 function MapPage() {
   const [mapError, setMapError] = useState(null);
