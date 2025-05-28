@@ -1,38 +1,20 @@
 .card-page {
   width: 100%;
-  height: calc(100% - 150px);
+  height: 100%;
   background-color: #fff;
   padding: 10px;
-  overflow-y: auto;
-  margin: 0 auto;
+  margin: 0;
   position: relative;
   box-sizing: border-box;
-  scrollbar-gutter: stable;
-}
-
-.card-page::-webkit-scrollbar {
-  width: 6px;
-}
-
-.card-page:hover::-webkit-scrollbar {
-  width: 6px;
-}
-
-.card-page:hover::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.card-page:hover::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
 }
 
 .card-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 0 0 0 6px;
+  padding: 0 0 0 16px;
   width: 100%;
+  margin: 0 auto;
   box-sizing: border-box;
 }
 

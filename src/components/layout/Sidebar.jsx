@@ -1,6 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { NavLink, Outlet } from 'react-router-dom';
-import '../../styles/Sidebar.css';
+import '../../styles/components/MainLayout.css';
+import '../../styles/components/Sidebar.css';
 
 const menuItems = [
   { type: 'main', label: '지도 홈', path: '/main' },
@@ -14,7 +16,7 @@ function capitalizeFirstLetter(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function Sidebar() {
+function Sidebar({ onPlaceSelect }) {
   return (
     <aside className="sidebar">
       <div className="sidebar__main">
@@ -46,12 +48,16 @@ function Sidebar() {
           })}
         </nav>
 
-        <div className="sidebar__content">
-          <Outlet />
+        <div className="sidebar__content custom-scrollbar">
+          <Outlet context={{ onPlaceSelect }} />
         </div>
       </div>
     </aside>
   );
 }
+
+Sidebar.propTypes = {
+  onPlaceSelect: PropTypes.func.isRequired,
+};
 
 export default Sidebar;

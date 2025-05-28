@@ -1,36 +1,104 @@
-import React, { useEffect, useState } from 'react';
-import '../../styles/MainLayout.css';
+import React, { useEffect, useState, useRef } from 'react';
+import PropTypes from 'prop-types';
+import '../../styles/components/Map.css';
 
-function MapPage() {
-  const [mapError, setMapError] = useState(null);
+const Map = ({ onPlaceSelect, selectedPlace }) => {
+  const mapContainer = useRef(null);
+  const [map, setMap] = useState(null);
+
+  const places = [
+    {
+      id: 1,
+      name: '스타벅스',
+      description: '맛있는 커피와 좋은 분위기',
+      reviewCount: 6,
+      averagePrice: 10000,
+      lat: 36.7794,
+      lng: 127.1378,
+      isLiked: false,
+    },
+    // ... 더 많은 장소들
+  ];
 
   useEffect(() => {
-    try {
-      window.kakao.maps.load(() => {
-        const container = document.getElementById('map');
-        const options = {
-          center: new window.kakao.maps.LatLng(36.851558, 127.151092),
-          level: 3,
-        };
-        const map = new window.kakao.maps.Map(container, options);
+    const initializeMap = async () => {
+      if (!window.kakao || !mapContainer.current) return;
 
-        const marker = new window.kakao.maps.Marker({
-          position: options.center,
+      await window.kakao.maps.load();
+      const options = {
+        center: new window.kakao.maps.LatLng(36.7794, 127.1378),
+        level: 3,
+      };
+
+      const kakaoMap = new window.kakao.maps.Map(mapContainer.current, options);
+      setMap(kakaoMap);
+
+      // 마커 생성 및 클릭 이벤트
+      places.forEach(place => {
+        const markerPosition = new window.kakao.maps.LatLng(
+          place.lat,
+          place.lng,
+        );
+
+        const content = `
+          <div class="custom-marker" data-place-id="${place.id}">
+            <div class="marker-content">
+              <span class="place-name">${place.name}</span>
+              <span class="place-price">₩${place.averagePrice.toLocaleString()}</span>
+            </div>
+          </div>
+        `;
+
+        const customOverlay = new window.kakao.maps.CustomOverlay({
+          position: markerPosition,
+          content: content,
+          yAnchor: 1,
         });
 
-        marker.setMap(map);
+        customOverlay.setMap(kakaoMap);
       });
-    } catch (error) {
-      console.error('카카오맵 초기화 중 오류:', error.message);
-      setMapError(error.message);
-    }
-  }, []);
+
+      // 마커 클릭 이벤트
+      mapContainer.current.addEventListener('click', e => {
+        const marker = e.target.closest('.custom-marker');
+        if (marker) {
+          const placeId = parseInt(marker.dataset.placeId);
+          const place = places.find(p => p.id === placeId);
+          if (place) {
+            onPlaceSelect(place);
+          }
+        }
+      });
+    };
+
+    initializeMap();
+  }, [onPlaceSelect]);
+
+  useEffect(() => {
+    if (!map || !selectedPlace) return;
+
+    // 선택된 장소로 지도 중심 이동
+    const moveToPlace = () => {
+      const position = new window.kakao.maps.LatLng(
+        selectedPlace.lat || 36.7794,
+        selectedPlace.lng || 127.1378,
+      );
+      map.setCenter(position);
+    };
+
+    moveToPlace();
+  }, [map, selectedPlace]);
 
   return (
-    <div id="map" className="map-container">
-      {mapError && <div className="error-message">{mapError}</div>}
+    <div className="map-container">
+      <div ref={mapContainer} id="map" className="map-container"></div>
     </div>
   );
-}
+};
 
-export default MapPage;
+Map.propTypes = {
+  onPlaceSelect: PropTypes.func.isRequired,
+  selectedPlace: PropTypes.object,
+};
+
+export default Map;

@@ -1,57 +1,10 @@
 import React, { useState } from 'react';
-import '../styles/CardLayout.css';
+import PropTypes from 'prop-types';
+import '../styles/components/CardLayout.css';
+import { generateDummyReservations } from '../constants/dummyData';
 
 function ReservationPage() {
-  const [reservations, setReservations] = useState([
-    {
-      id: 1,
-      date: '2025-05-02',
-      storeName: '공주대학교 천안공과대학',
-      address: '천안시 서북구 대학로 100',
-      imageUrl: null,
-      isCancelling: false,
-    },
-    {
-      id: 2,
-      date: '2025-05-02',
-      storeName: '공주대학교 천안공과대학',
-      address: '천안시 서북구 대학로 100',
-      imageUrl: null,
-      isCancelling: false,
-    },
-    {
-      id: 3,
-      date: '2025-05-02',
-      storeName: '공주대학교 천안공과대학',
-      address: '천안시 서북구 대학로 100',
-      imageUrl: null,
-      isCancelling: false,
-    },
-    {
-      id: 4,
-      date: '2025-05-02',
-      storeName: '공주대학교 천안공과대학',
-      address: '천안시 서북구 대학로 100',
-      imageUrl: null,
-      isCancelling: false,
-    },
-    {
-      id: 5,
-      date: '2025-05-02',
-      storeName: '공주대학교 천안공과대학',
-      address: '천안시 서북구 대학로 100',
-      imageUrl: null,
-      isCancelling: false,
-    },
-    {
-      id: 6,
-      date: '2025-05-02',
-      storeName: '공주대학교 천안공과대학',
-      address: '천안시 서북구 대학로 100',
-      imageUrl: null,
-      isCancelling: false,
-    },
-  ]);
+  const [reservations, setReservations] = useState(generateDummyReservations());
 
   const handleCancelClick = id => {
     setReservations(
@@ -64,8 +17,7 @@ function ReservationPage() {
   };
 
   const handleCancelConfirm = id => {
-    // 여기에 실제 예약 취소 API 호출 로직 추가
-    console.log('예약 취소 확정:', id);
+    // TODO: 예약 취소 API 호출 구현
     setReservations(
       reservations.map(reservation =>
         reservation.id === id
@@ -144,5 +96,9 @@ function ReservationPage() {
     </div>
   );
 }
+
+ReservationPage.propTypes = {
+  // 현재는 props가 없지만, 향후 확장성을 위해 PropTypes 정의
+};
 
 export default ReservationPage;

@@ -1,20 +1,43 @@
 import React, { useState } from 'react';
-import '../styles/LikedPlacePage.css';
+import { useOutletContext } from 'react-router-dom';
+import '../styles/pages/LikedPlacePage.css';
+import '../styles/components/MainLayout.css';
 import HeartButton from '../components/common/HeartButton';
 
 function LikedPlacePage() {
+  const context = useOutletContext();
+  const onPlaceSelect = context?.onPlaceSelect;
+
   const [places, setPlaces] = useState([
     {
       id: 1,
       title: '스타벅스',
       subtitle: '휴식 같은 당신의 신세계 백화점',
-      isLiked: true,
-      images: [
-        '/path/to/image1.jpg',
-      ],
+      isLiked: false,
+      images: ['/path/to/image1.jpg'],
     },
     {
       id: 2,
+      title: '스타벅스',
+      subtitle: '휴식 같은 당신의 신세계 백화점',
+      isLiked: false,
+      images: [
+        '/path/to/image1.jpg',
+        '/path/to/image2.jpg',
+        '/path/to/image3.jpg',
+        '/path/to/image4.jpg',
+        '/path/to/image5.jpg',
+      ],
+    },
+    {
+      id: 3,
+      title: '스타벅스',
+      subtitle: '휴식 같은 당신의 신세계 백화점',
+      isLiked: false,
+      images: [],
+    },
+    {
+      id: 4,
       title: '스타벅스',
       subtitle: '휴식 같은 당신의 신세계 백화점',
       isLiked: true,
@@ -22,39 +45,7 @@ function LikedPlacePage() {
         '/path/to/image1.jpg',
         '/path/to/image2.jpg',
         '/path/to/image3.jpg',
-      ],
-    },
-    {
-      id: 2,
-      title: '스타벅스',
-      subtitle: '휴식 같은 당신의 신세계 백화점',
-      isLiked: true,
-      images: [
-        '/path/to/image1.jpg',
-        '/path/to/image2.jpg',
-        '/path/to/image3.jpg',
-      ],
-    },
-    {
-      id: 2,
-      title: '스타벅스',
-      subtitle: '휴식 같은 당신의 신세계 백화점',
-      isLiked: true,
-      images: [
-        '/path/to/image1.jpg',
-        '/path/to/image2.jpg',
-        '/path/to/image3.jpg',
-      ],
-    },
-    {
-      id: 2,
-      title: '스타벅스',
-      subtitle: '휴식 같은 당신의 신세계 백화점',
-      isLiked: true,
-      images: [
-        '/path/to/image1.jpg',
-        '/path/to/image2.jpg',
-        '/path/to/image3.jpg',
+        '/path/to/image4.jpg',
       ],
     },
   ]);
@@ -67,10 +58,38 @@ function LikedPlacePage() {
     );
   };
 
+  const renderImages = images => {
+    if (!images || images.length === 0) {
+      return (
+        <div className="empty-images">
+          <span>이미지 없음</span>
+        </div>
+      );
+    }
+
+    const displayImages = images.slice(0, 5);
+    return (
+      <div className="image-scroll-container">
+        <div className="image-scroll-wrapper">
+          {displayImages.map((image, index) => (
+            <div key={index} className="scroll-image">
+              <img src={image} alt={`이미지 ${index + 1}`} />
+            </div>
+          ))}
+        </div>
+        <div className="image-count-indicator">{displayImages.length}장</div>
+      </div>
+    );
+  };
+
   return (
     <div className="liked-place-page">
       {places.map(place => (
-        <div key={place.id} className="place-section">
+        <div
+          key={place.id}
+          className="place-section"
+          onClick={() => onPlaceSelect?.(place)}
+        >
           <div className="place-header">
             <h2>{place.title}</h2>
             <HeartButton
@@ -79,13 +98,7 @@ function LikedPlacePage() {
             />
           </div>
           <p className="place-subtitle">{place.subtitle}</p>
-          <div className="image-grid">
-            {place.images.map((image, index) => (
-              <div key={index} className="grid-image">
-                <img src={image} alt={`${place.title} 이미지 ${index + 1}`} />
-              </div>
-            ))}
-          </div>
+          {renderImages(place.images)}
         </div>
       ))}
       {places.length === 0 && (

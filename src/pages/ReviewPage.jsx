@@ -1,27 +1,10 @@
 import React, { useState } from 'react';
-import '../styles/CardLayout.css';
+import PropTypes from 'prop-types';
+import '../styles/components/CardLayout.css';
+import { generateDummyReviews } from '../constants/dummyData';
 
 function ReviewPage() {
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      date: '2025-05-02',
-      storeName: '공주대학교 천안공과대학',
-      address: '천안시 서북구 대학로 100',
-      imageUrl: null,
-      isReviewed: false,
-      isWriting: false,
-    },
-    {
-      id: 2,
-      date: '2025-05-02',
-      storeName: '공주대학교 천안공과대학',
-      address: '천안시 서북구 대학로 100',
-      imageUrl: null,
-      isReviewed: false,
-      isWriting: false,
-    },
-  ]);
+  const [reviews, setReviews] = useState(generateDummyReviews());
 
   const handleWriteClick = id => {
     setReviews(
@@ -32,8 +15,7 @@ function ReviewPage() {
   };
 
   const handleSubmitReview = id => {
-    // 여기에 실제 리뷰 등록 API 호출 로직 추가
-    console.log('리뷰 등록:', id);
+    // TODO: 리뷰 등록 API 호출 구현
     setReviews(
       reviews.map(review =>
         review.id === id
@@ -107,5 +89,9 @@ function ReviewPage() {
     </div>
   );
 }
+
+ReviewPage.propTypes = {
+  // 현재는 props가 없지만, 향후 확장성을 위해 PropTypes 정의
+};
 
 export default ReviewPage;

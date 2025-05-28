@@ -1,0 +1,428 @@
+.place-detail-page {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.place-detail-page .detail-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 헤더 */
+.place-detail-page .detail-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  z-index: 10;
+}
+
+.place-detail-page .back-button,
+.place-detail-page .close-button {
+  width: 30px;
+  height: 30px;
+  background: 0;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  color: #333;
+  transition: background-color 0.2s ease;
+}
+
+.place-detail-page .back-button {
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 18L9 12L15 6' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-right: auto;
+}
+
+.place-detail-page .close-button {
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18 6L6 18M6 6L18 18' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.place-detail-page .back-button:hover,
+.place-detail-page .close-button:hover {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+/* 사진 영역 */
+.place-detail-page .place-image {
+  width: 100%;
+  height: 240px;
+  background: #f5f5f5;
+  position: relative;
+}
+
+.place-detail-page .place-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.place-detail-page .image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #eee;
+}
+
+/* 장소 정보 */
+.place-detail-page .place-info {
+  padding: 10px 20px;
+  background: #fff;
+  position: relative;
+  z-index: 1;
+}
+
+.place-detail-page .place-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0px;
+}
+
+.place-detail-page .place-name {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.place-detail-page .place-meta {
+  margin-bottom: 0px;
+}
+
+.place-detail-page .place-meta span {
+  font-size: 14px;
+  color: #666;
+}
+
+/* 정보 리스트 */
+.place-detail-page .info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.place-detail-page .info-item {
+  padding: 4px 0;
+  font-size: 15px;
+  color: #333;
+}
+
+.place-detail-page .info-item:last-child {
+  border-bottom: none;
+}
+
+/* 예약 버튼 */
+.place-detail-page .reservation-section {
+  padding: 10px 24px;
+}
+
+.place-detail-page .reservation-button {
+  width: 90%;
+  padding: 12px;
+  margin: 0 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  background-color: #0051ff;
+  color: white;
+}
+
+.place-detail-page .reservation-button:hover,
+.place-detail-page .action-button:hover {
+  background-color: #0045db;
+}
+
+.place-detail-page .action-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.place-detail-page .cancel-button {
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+.place-detail-page .cancel-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* 스크롤바 스타일 */
+.place-detail-page .scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.place-detail-page .scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.place-detail-page .scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.place-detail-page .scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.place-detail-page .scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* 리뷰 섹션 */
+.place-detail-page .review-section {
+  flex: 1;
+  overflow-y: scroll;
+  padding: 16px;
+  background: #fff;
+}
+
+.place-detail-page .review-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 10px 0;
+}
+
+/* 리뷰 이미지 그리드 */
+.place-detail-page .review-images {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.place-detail-page .review-image-item {
+  aspect-ratio: 4/3;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.place-detail-page .review-image-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.place-detail-page .review-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #f5f5f5;
+}
+
+/* 리뷰 목록 */
+.place-detail-page .review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.place-detail-page .review-content {
+  font-size: 15px;
+  color: #333;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.place-detail-page .review-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.place-detail-page .review-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.place-detail-page .user-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #f0f0f0
+    url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='8' r='4' stroke='%23666' stroke-width='2'/%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2' stroke='%23666' stroke-width='2'/%3E%3C/svg%3E")
+    center/16px no-repeat;
+}
+
+.place-detail-page .review-user span {
+  font-size: 14px;
+  color: #666;
+}
+
+/* 달력 섹션 */
+.place-detail-page .calendar-section {
+  flex: 1;
+  overflow-y: scroll;
+  padding: 0;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.place-detail-page .calendar-header {
+  position: relative;
+  left: 10px;
+  padding: 10px;
+  text-align: left;
+  width: 100%;
+}
+
+.place-detail-page .calendar-header h3 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+.place-detail-page .calendar-container {
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.place-detail-page .calendar-container .rdp {
+  margin: 0;
+  color: #333;
+}
+
+.place-detail-page .calendar-container .rdp-months {
+  padding: 10px;
+}
+
+.place-detail-page .calendar-container .rdp-month {
+  width: 100%;
+}
+
+.place-detail-page .calendar-container .rdp-caption {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #333;
+}
+
+.place-detail-page .calendar-container .rdp-caption_label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.place-detail-page .calendar-container .rdp-nav {
+  display: flex;
+  gap: 10px;
+}
+
+.place-detail-page .calendar-container .rdp-nav_button {
+  padding: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+}
+
+.place-detail-page .calendar-container .rdp-head_cell {
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+  padding: 10px;
+  text-align: center;
+}
+
+.place-detail-page .calendar-container .rdp-tbody {
+  margin-top: 10px;
+}
+
+.place-detail-page .calendar-container .rdp-cell {
+  padding: 5px;
+  text-align: center;
+  color: #333;
+}
+
+.place-detail-page .calendar-container .rdp-button {
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
+  border-radius: 10px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* 달력 하단 버튼 */
+.place-detail-page .calendar-actions {
+  padding: 20px;
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.place-detail-page .calendar-actions button {
+  flex: 1;
+  height: 48px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.place-detail-page .cancel-button {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.place-detail-page .cancel-button:hover {
+  background-color: #eee;
+}
+
+.place-detail-page .confirm-button {
+  background-color: #0051ff;
+  color: white;
+}
+
+.place-detail-page .confirm-button:hover:not(:disabled) {
+  background-color: #0045db;
+}
+
+.place-detail-page .confirm-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

@@ -1,6 +1,4 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import Header from '../components/layout/Header';
-import Footer from '../components/common/Footer';
 import MainLayout from '../components/layout/MainLayout';
 import MainPage from '../pages/MainPage';
 import LikedPlacePage from '../pages/LikedPlacePage';
@@ -24,7 +22,6 @@ const PrivateRoute = ({ children }) => {
 
 const AppRoutes = () => (
   <>
-    <Header />
     <Routes>
       <Route path="/" element={<MainLayout />}>
         {/* 로그인하지 않은 사용자를 위한 루트 페이지는 로그인 페이지 */}
@@ -76,7 +73,6 @@ const AppRoutes = () => (
         <Route path="login" element={<LoginPage />} />
       </Route>
     </Routes>
-    <Footer />
   </>
 );
 
