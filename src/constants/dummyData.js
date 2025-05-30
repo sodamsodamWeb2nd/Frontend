@@ -1,29 +1,29 @@
-export const DUMMY_PLACE = {
-  storeName: '공주대학교 천안공과대학',
-  address: '천안시 서북구 대학로 100',
-  imageUrl: null,
-  date: '2025-05-02',
-};
-
-export const DUMMY_REVIEW = {
-  userId: 'user1302382',
-  content: '너무 맛있어요',
-  rating: 5,
-};
-
-export const generateDummyReservations = (count = 6) => {
+// 더미 예약 데이터 생성
+export const generateDummyReservations = (count = 5) => {
   return Array.from({ length: count }, (_, index) => ({
     id: index + 1,
-    ...DUMMY_PLACE,
+    storeName: `가게 ${index + 1}`,
+    date: new Date(
+      Date.now() + (index + 1) * 24 * 60 * 60 * 1000,
+    ).toLocaleDateString(),
+    address: `서울시 강남구 테헤란로 ${index + 1}길`,
+    imageUrl: `https://picsum.photos/200/200?random=${index + 1}`,
+    isCancelled: false,
     isCancelling: false,
   }));
 };
 
-export const generateDummyReviews = (count = 2) => {
+// 더미 리뷰 데이터 생성
+export const generateDummyReviews = (count = 5) => {
   return Array.from({ length: count }, (_, index) => ({
     id: index + 1,
-    ...DUMMY_PLACE,
-    ...DUMMY_REVIEW,
+    storeName: `가게 ${index + 1}`,
+    date: new Date(
+      Date.now() - (index + 1) * 24 * 60 * 60 * 1000,
+    ).toLocaleDateString(),
+    address: `서울시 강남구 테헤란로 ${index + 1}길`,
+    imageUrl: `https://picsum.photos/200/200?random=${index + 10 + 1}`,
+    content: `이 가게는 정말 좋았습니다. 음식도 맛있고 서비스도 훌륭했어요! ${index + 1}`,
     isReviewed: false,
     isWriting: false,
   }));

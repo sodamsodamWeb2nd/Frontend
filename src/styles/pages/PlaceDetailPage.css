@@ -1,23 +1,58 @@
+:root {
+  --calendar-cell-size: 40px;
+  --primary-color: #10b981;
+  --primary-hover: #059669;
+  --primary-light: #dcfce7;
+  --background-light: #eee;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-disabled: #d1d5db;
+  --border-radius-sm: 8px;
+}
+
+/* 기본 레이아웃 */
 .place-detail-page {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   background-color: #fff;
-  border-radius: 12px;
+  border-radius: var(--border-radius-sm);
   overflow: hidden;
   position: relative;
 }
 
-.place-detail-page .detail-content {
+.detail-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
-/* 헤더 */
-.place-detail-page .detail-header {
+/* 스크롤바 스타일 */
+.scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 0.1px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* 헤더 버튼 공통 스타일 */
+.detail-header {
   position: absolute;
   top: 0;
   left: 0;
@@ -29,400 +64,437 @@
   z-index: 10;
 }
 
-.place-detail-page .back-button,
-.place-detail-page .close-button {
+.back-button,
+.close-button {
   width: 30px;
   height: 30px;
   background: 0;
   border: none;
-  border-radius: 50%;
+  border-radius: var(--border-radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   backdrop-filter: blur(4px);
-  color: #333;
+  color: var(--text-primary);
   transition: background-color 0.2s ease;
 }
 
-.place-detail-page .back-button {
+.back-button {
   background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 18L9 12L15 6' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-position: center;
   background-repeat: no-repeat;
   margin-right: auto;
 }
 
-.place-detail-page .close-button {
+.close-button {
   background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18 6L6 18M6 6L18 18' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-position: center;
   background-repeat: no-repeat;
 }
 
-.place-detail-page .back-button:hover,
-.place-detail-page .close-button:hover {
+.back-button:hover,
+.close-button:hover {
   background-color: rgba(255, 255, 255, 0.7);
 }
 
-/* 사진 영역 */
-.place-detail-page .place-image {
+/* 장소 정보 */
+.place-image {
   width: 100%;
   height: 240px;
-  background: #f5f5f5;
+  background: var(--background-light);
   position: relative;
 }
 
-.place-detail-page .place-image img {
+.place-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.place-detail-page .image-placeholder {
-  width: 100%;
-  height: 100%;
-  background: #eee;
-}
-
-/* 장소 정보 */
-.place-detail-page .place-info {
-  padding: 10px 20px;
+.place-info2 {
+  padding: 10px 30px;
   background: #fff;
   position: relative;
   z-index: 1;
 }
 
-.place-detail-page .place-header {
+.place-header2 {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 0px;
+  margin-bottom: 10px;
 }
 
-.place-detail-page .place-name {
+.place-name2 {
   font-size: 24px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin: 0;
 }
 
-.place-detail-page .place-meta {
-  margin-bottom: 0px;
+.place-meta2 {
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: var(--text-secondary);
 }
 
-.place-detail-page .place-meta span {
-  font-size: 14px;
-  color: #666;
-}
-
-/* 정보 리스트 */
-.place-detail-page .info-list {
+.place-info-list {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 6px;
 }
 
-.place-detail-page .info-item {
-  padding: 4px 0;
-  font-size: 15px;
-  color: #333;
+.place-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.place-detail-page .info-item:last-child {
-  border-bottom: none;
+.place-info-label {
+  font-size: 14px;
+  color: var(--text-secondary);
 }
 
 /* 예약 버튼 */
-.place-detail-page .reservation-section {
-  padding: 10px 24px;
-}
-
-.place-detail-page .reservation-button {
+.reservation-button {
   width: 90%;
   padding: 12px;
-  margin: 0 20px;
+  margin: 15px 20px;
   border: none;
-  border-radius: 12px;
+  border-radius: var(--border-radius-sm);
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  background-color: #0051ff;
+  background-color: var(--primary-color);
   color: white;
 }
 
-.place-detail-page .reservation-button:hover,
-.place-detail-page .action-button:hover {
-  background-color: #0045db;
-}
-
-.place-detail-page .action-button {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.place-detail-page .cancel-button {
-  background-color: #f5f5f5;
-  color: #666;
-}
-
-.place-detail-page .cancel-button:hover {
-  background-color: #e0e0e0;
-}
-
-/* 스크롤바 스타일 */
-.place-detail-page .scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
-}
-
-.place-detail-page .scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.place-detail-page .scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.place-detail-page .scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-}
-
-.place-detail-page .scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.3);
+.reservation-button:hover {
+  background-color: var(--primary-hover);
 }
 
 /* 리뷰 섹션 */
-.place-detail-page .review-section {
+.review-section {
   flex: 1;
+  overflow-x: hidden;
   overflow-y: scroll;
-  padding: 16px;
+  padding: 10px 10px 20px 20px;
   background: #fff;
 }
 
-.place-detail-page .review-section h3 {
+.review-section h3 {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin: 0 0 10px 0;
 }
 
-/* 리뷰 이미지 그리드 */
-.place-detail-page .review-images {
+.review-images {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
   margin-bottom: 24px;
 }
 
-.place-detail-page .review-image-item {
+.review-image-item {
   aspect-ratio: 4/3;
-  border-radius: 8px;
+  border-radius: var(--border-radius-sm);
   overflow: hidden;
+  background: var(--background-light);
 }
 
-.place-detail-page .review-image-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.place-detail-page .review-image-placeholder {
-  width: 100%;
-  height: 100%;
-  background: #f5f5f5;
-}
-
-/* 리뷰 목록 */
-.place-detail-page .review-list {
+.review-list {
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-.place-detail-page .review-content {
+.review-content {
   font-size: 15px;
-  color: #333;
+  color: var(--text-primary);
   margin: 0;
   line-height: 1.5;
 }
 
-.place-detail-page .review-item {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.place-detail-page .review-user {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.place-detail-page .user-icon {
+.user-icon {
   width: 24px;
   height: 24px;
-  border-radius: 50%;
-  background: #f0f0f0
+  border-radius: var(--border-radius-sm);
+  background: var(--background-light)
     url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='8' r='4' stroke='%23666' stroke-width='2'/%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2' stroke='%23666' stroke-width='2'/%3E%3C/svg%3E")
     center/16px no-repeat;
 }
 
-.place-detail-page .review-user span {
-  font-size: 14px;
-  color: #666;
-}
-
 /* 달력 섹션 */
-.place-detail-page .calendar-section {
-  flex: 1;
+.calendar-section {
+  padding: 10px 10px 10px 20px;
+  background-color: white;
+  border-radius: var(--border-radius-sm);
   overflow-y: scroll;
-  padding: 0;
-  background: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 400px;
 }
 
-.place-detail-page .calendar-header {
-  position: relative;
-  left: 10px;
-  padding: 10px;
-  text-align: left;
+.calendar-header {
   width: 100%;
+  padding: 15px 10px 0 10px;
+  text-align: left;
 }
 
-.place-detail-page .calendar-header h3 {
-  font-size: 16px;
+.calendar-header h3 {
+  font-size: 18px;
   font-weight: 500;
-  color: #333;
+  color: var(--text-primary);
   margin: 0;
 }
 
-.place-detail-page .calendar-container {
-  padding: 0;
+.calendar-container {
   display: flex;
   justify-content: center;
   width: 100%;
   max-width: 400px;
+  min-height: 300px;
+  margin: 10px;
+  padding: 16px;
+  background-color: white;
+  border-radius: var(--border-radius-sm);
 }
 
-.place-detail-page .calendar-container .rdp {
+/* React Day Picker 스타일 */
+.rdp {
+  --rdp-cell-size: 40px;
+  --rdp-accent-color: #10b981; /* 초록색 */
+  --rdp-background-color: #f0fdf4; /* 연한 초록 배경 */
   margin: 0;
-  color: #333;
-}
-
-.place-detail-page .calendar-container .rdp-months {
-  padding: 10px;
-}
-
-.place-detail-page .calendar-container .rdp-month {
-  width: 100%;
-}
-
-.place-detail-page .calendar-container .rdp-caption {
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
+  color: #1f2937;
+  display: flex !important;
+  flex-direction: column;
   align-items: center;
-  color: #333;
+  justify-content: center;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.place-detail-page .calendar-container .rdp-caption_label {
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
+.rdp-month_grid {
+  width: 100%;
+  height: 100%;
+  border-collapse: separate;
+  border-spacing: 1px;
+  table-layout: fixed;
 }
 
-.place-detail-page .calendar-container .rdp-nav {
-  display: flex;
-  gap: 10px;
-}
-
-.place-detail-page .calendar-container .rdp-nav_button {
-  padding: 5px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #666;
-}
-
-.place-detail-page .calendar-container .rdp-head_cell {
-  font-size: 14px;
-  font-weight: 400;
-  color: #666;
-  padding: 10px;
-  text-align: center;
-}
-
-.place-detail-page .calendar-container .rdp-tbody {
-  margin-top: 10px;
-}
-
-.place-detail-page .calendar-container .rdp-cell {
-  padding: 5px;
-  text-align: center;
-  color: #333;
-}
-
-.place-detail-page .calendar-container .rdp-button {
-  width: 36px;
-  height: 36px;
-  font-size: 14px;
-  border-radius: 10px;
-  color: #333;
+.rdp-caption {
+  padding: 0 16px 20px 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  width: 100%;
+}
+
+.rdp-caption_label {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  text-transform: none;
+  letter-spacing: -0.025em;
+}
+
+.rdp-nav {
+  gap: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.rdp-nav_button {
+  width: 36px;
+  height: 36px;
+  background: transparent;
   border: none;
-  background: none;
+  border-radius: var(--border-radius-sm);
+  color: #6b7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 16px;
+}
+
+.rdp-nav_button:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.rdp-nav_button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.rdp-weekdays {
+  width: calc(100% / 7);
+  height: 40px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #6b7280;
+  text-align: center !important;
+  text-transform: uppercase;
+  vertical-align: middle !important;
+}
+
+.rdp-button {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--border-radius-sm);
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.rdp-day {
+  width: calc(100% / 7);
+  height: 40px;
+  font-size: 14px;
+  border-radius: var(--border-radius-sm);
+  border: none;
+  color: #374151 !important;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  font-weight: 500;
+  transition: all 0.1s ease;
+}
+
+.rdp-button:hover:not([disabled]) {
+  background-color: #f3f4f6;
+  color: #1f2937 !important;
+}
+
+.rdp-day_selected:not([disabled]) .rdp-button {
+  background-color: #10b981 !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border: none !important;
+}
+
+.rdp-day_selected:not([disabled]):hover .rdp-button {
+  background-color: #059669 !important;
+  color: white !important;
+}
+
+.rdp-day_today .rdp-button {
+  font-weight: 600;
+  color: #10b981 !important;
+  background-color: #dcfce7;
+  border: 1px solid #10b981;
+}
+
+.rdp-day_today.rdp-day_selected .rdp-button {
+  background-color: #10b981 !important;
+  color: white !important;
+}
+
+.rdp-day_outside .rdp-button {
+  color: #d1d5db !important;
+  opacity: 0.3 !important;
+  cursor: not-allowed !important;
+  background-color: transparent !important;
+}
+
+.rdp-day_outside.rdp-day_disabled .rdp-button {
+  color: #f3f4f6 !important;
+  opacity: 0.2 !important;
+}
+
+.rdp-button[disabled] {
+  color: #d1d5db !important;
+  cursor: not-allowed !important;
+  background-color: transparent !important;
+  opacity: 0.4 !important;
+}
+
+.rdp-day:nth-child(1) .rdp-button {
+  color: #ef4444 !important;
+}
+
+.rdp-day:nth-child(1).rdp-day_outside .rdp-button {
+  color: #fca5a5 !important;
+}
+
+.rdp-day:nth-child(7) .rdp-button {
+  color: #2563eb !important;
+}
+
+.rdp-day:nth-child(7).rdp-day_outside .rdp-button {
+  color: #93c5fd !important;
+  opacity: 0.3 !important;
+}
+
+.rdp-day:nth-child(7).rdp-day_selected .rdp-button {
+  color: white !important;
+}
+
+/* 반응형 조정 */
+@media (max-width: 480px) {
+  .rdp-button {
+    width: 36px;
+    height: 36px;
+    font-size: 13px;
+  }
+
+  .rdp {
+    --rdp-cell-size: 36px;
+  }
+
+  .rdp-caption_label {
+    font-size: 16px;
+  }
 }
 
 /* 달력 하단 버튼 */
-.place-detail-page .calendar-actions {
-  padding: 20px;
+.calendar-actions {
+  padding: 20px 0 0 0;
   display: flex;
-  gap: 8px;
+  gap: 12px;
   width: 100%;
   max-width: 400px;
 }
 
-.place-detail-page .calendar-actions button {
+.calendar-actions button {
   flex: 1;
   height: 48px;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--border-radius-sm);
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
-.place-detail-page .cancel-button {
-  background-color: #f5f5f5;
-  color: #333;
+.cancel-button {
+  background-color: var(--background-light);
+  color: var(--text-primary);
 }
 
-.place-detail-page .cancel-button:hover {
+.cancel-button:hover {
   background-color: #eee;
 }
 
-.place-detail-page .confirm-button {
-  background-color: #0051ff;
+.confirm-button {
+  background-color: var(--primary-color);
   color: white;
 }
 
-.place-detail-page .confirm-button:hover:not(:disabled) {
-  background-color: #0045db;
+.confirm-button:hover:not(:disabled) {
+  background-color: var(--primary-hover);
 }
 
-.place-detail-page .confirm-button:disabled {
-  background-color: #ccc;
+.confirm-button:disabled {
+  background-color: var(--text-disabled);
   cursor: not-allowed;
 }

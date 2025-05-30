@@ -1,61 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import '../styles/pages/LikedPlacePage.css';
 import '../styles/components/MainLayout.css';
 import HeartButton from '../components/common/HeartButton';
+import { placeService } from '../service/placeService';
 
 function LikedPlacePage() {
   const context = useOutletContext();
   const onPlaceSelect = context?.onPlaceSelect;
 
-  const [places, setPlaces] = useState([
-    {
-      id: 1,
-      title: '스타벅스',
-      subtitle: '휴식 같은 당신의 신세계 백화점',
-      isLiked: false,
-      images: ['/path/to/image1.jpg'],
-    },
-    {
-      id: 2,
-      title: '스타벅스',
-      subtitle: '휴식 같은 당신의 신세계 백화점',
-      isLiked: false,
-      images: [
-        '/path/to/image1.jpg',
-        '/path/to/image2.jpg',
-        '/path/to/image3.jpg',
-        '/path/to/image4.jpg',
-        '/path/to/image5.jpg',
-      ],
-    },
-    {
-      id: 3,
-      title: '스타벅스',
-      subtitle: '휴식 같은 당신의 신세계 백화점',
-      isLiked: false,
-      images: [],
-    },
-    {
-      id: 4,
-      title: '스타벅스',
-      subtitle: '휴식 같은 당신의 신세계 백화점',
-      isLiked: true,
-      images: [
-        '/path/to/image1.jpg',
-        '/path/to/image2.jpg',
-        '/path/to/image3.jpg',
-        '/path/to/image4.jpg',
-      ],
-    },
-  ]);
+  const [places, setPlaces] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleLikeToggle = placeId => {
-    setPlaces(
-      places.map(place =>
-        place.id === placeId ? { ...place, isLiked: !place.isLiked } : place,
-      ),
-    );
+  useEffect(() => {
+    fetchLikedPlaces();
+  }, []);
+
+  const fetchLikedPlaces = async () => {
+    try {
+      setLoading(true);
+      const data = await placeService.getLikedPlaces();
+      setPlaces(data);
+      setError(null);
+    } catch (error) {
+      console.error('찜한 장소 목록 로딩 실패:', error);
+      setError('찜한 장소 목록을 불러오는데 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLikeToggle = async (placeId, e) => {
+    e.stopPropagation();
+    try {
+      await placeService.toggleLike(placeId);
+      await fetchLikedPlaces(); // 찜 목록 새로고침
+    } catch (error) {
+      console.error('찜하기 처리 실패:', error);
+    }
   };
 
   const renderImages = images => {
@@ -82,6 +65,14 @@ function LikedPlacePage() {
     );
   };
 
+  if (loading) {
+    return <div className="loading">로딩 중...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
+
   return (
     <div className="liked-place-page">
       {places.map(place => (
@@ -91,13 +82,13 @@ function LikedPlacePage() {
           onClick={() => onPlaceSelect?.(place)}
         >
           <div className="place-header">
-            <h2>{place.title}</h2>
+            <h2>{place.name}</h2>
             <HeartButton
               isLiked={place.isLiked}
-              onClick={() => handleLikeToggle(place.id)}
+              onToggle={e => handleLikeToggle(place.id, e)}
             />
           </div>
-          <p className="place-subtitle">{place.subtitle}</p>
+          <p className="place-subtitle">{place.description}</p>
           {renderImages(place.images)}
         </div>
       ))}

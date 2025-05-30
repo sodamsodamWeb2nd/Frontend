@@ -14,6 +14,8 @@
 }
 
 .login-message h2 {
+  margin: 10px 0;
+  font-size: 32px;
   color: #333;
   margin: 0;
   font-size: 1rem;
@@ -23,27 +25,37 @@
 }
 
 .kakao-btn {
-  background-color: #fee500;
+  width: 100%;
+  max-width: 300px;
+  padding: 15px;
+  margin-top: 10px;
   border: none;
   border-radius: 8px;
+  font-size: 16px;
   font-weight: 500;
-  color: #000000;
   cursor: pointer;
-  transition: background-color 0.2s;
-  width: 100%;
-}
-
-.kakao-btn:hover {
-  background-color: #fdd835;
+  transition: all 0.2s ease;
 }
 
 .kakao-login-btn {
-  display: block;
-  padding: 0.6rem 1rem;
-  font-size: 0.85rem;
-  margin: 0 auto;
-  max-width: 200px;
-  margin-top: 1.5rem;
+  background-color: #fee500;
+  color: #000;
+}
+
+.kakao-login-btn:hover {
+  background-color: #fada0a;
+}
+
+.error-banner {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  padding: 12px 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
 }
 
 .kakao-login-form {
@@ -104,7 +116,6 @@
 .login-checkbox input[type='checkbox'] {
   margin: 0;
 }
-
 .kakao-submit-btn {
   width: 100%;
   padding: 0.6rem;

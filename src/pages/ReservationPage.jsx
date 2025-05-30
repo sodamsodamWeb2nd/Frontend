@@ -1,10 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import '../styles/components/CardLayout.css';
-import { generateDummyReservations } from '../constants/dummyData';
+import { reservationService } from '../service/reservationService';
 
 function ReservationPage() {
-  const [reservations, setReservations] = useState(generateDummyReservations());
+  const [reservations, setReservations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchReservations();
+  }, []);
+
+  const fetchReservations = async () => {
+    try {
+      setLoading(true);
+      const data = await reservationService.getReservations();
+      setReservations(data);
+      setError(null);
+    } catch (error) {
+      console.error('예약 목록 로딩 실패:', error);
+      setError('예약 목록을 불러오는데 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleCancelClick = id => {
     setReservations(
@@ -16,15 +36,13 @@ function ReservationPage() {
     );
   };
 
-  const handleCancelConfirm = id => {
-    // TODO: 예약 취소 API 호출 구현
-    setReservations(
-      reservations.map(reservation =>
-        reservation.id === id
-          ? { ...reservation, isCancelled: true, isCancelling: false }
-          : reservation,
-      ),
-    );
+  const handleCancelConfirm = async id => {
+    try {
+      await reservationService.cancelReservation(id);
+      await fetchReservations(); // 예약 목록 새로고침
+    } catch (error) {
+      console.error('예약 취소 실패:', error);
+    }
   };
 
   const handleCancelCancel = id => {
@@ -37,6 +55,14 @@ function ReservationPage() {
     );
   };
 
+  if (loading) {
+    return <div className="loading">로딩 중...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
+
   return (
     <div className="card-page">
       <div className="card-list">
@@ -45,15 +71,15 @@ function ReservationPage() {
             <div className="card-main">
               <div className="card-content">
                 <div className="card-info">
-                  <h3 className="card-title">{reservation.storeName}</h3>
-                  <p className="card-date">{reservation.date}</p>
-                  <p className="card-description">{reservation.address}</p>
+                  <h3 className="card-title">{reservation.placeName}</h3>
+                  <p className="card-date">{reservation.reservationDate}</p>
+                  <p className="card-description">{reservation.placeAddress}</p>
                 </div>
                 <div className="card-image">
                   {reservation.imageUrl ? (
                     <img
                       src={reservation.imageUrl}
-                      alt={reservation.storeName}
+                      alt={reservation.placeName}
                     />
                   ) : (
                     <div className="image-placeholder" />
@@ -62,7 +88,7 @@ function ReservationPage() {
               </div>
             </div>
             <div className="card-button-wrapper">
-              {reservation.isCancelled ? (
+              {reservation.status === 'CANCELLED' ? (
                 <button className="card-button" disabled>
                   취소 완료
                 </button>

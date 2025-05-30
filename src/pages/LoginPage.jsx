@@ -1,133 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/pages/LoginPage.css';
 
 function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isLoginForm, setIsLoginForm] = useState(false);
-  const [formData, setFormData] = useState({
-    loginId: '',
-    password: '',
-    rememberMe: false,
-  });
-  const [idError, setIdError] = useState('');
+  const [error, setError] = useState(location.state?.error || '');
 
-  const validateId = value => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^(01[016789])-?(\d{3,4})-?(\d{4})$/;
+  const handleKakaoLogin = async () => {
+    try {
+      const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
+      const REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
 
-    if (!value) {
-      setIdError('아이디를 입력해주세요');
-      return false;
-    }
-    if (!emailRegex.test(value) && !phoneRegex.test(value)) {
-      setIdError('이메일 또는 전화번호 형식이 올바르지 않습니다');
-      return false;
-    }
-    setIdError('');
-    return true;
-  };
+      if (!KAKAO_CLIENT_ID || !REDIRECT_URI) {
+        setError('카카오 로그인 설정이 올바르지 않습니다.');
+        return;
+      }
 
-  const handleInputChange = e => {
-    const { name, value, type, checked } = e.target;
-    const inputValue = type === 'checkbox' ? checked : value;
-
-    setFormData(prev => ({
-      ...prev,
-      [name]: inputValue,
-    }));
-
-    if (name === 'loginId' && value) {
-      validateId(value);
+      const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+      window.location.href = kakaoURL;
+    } catch (error) {
+      console.error('카카오 로그인 초기화 중 오류:', error);
+      setError('카카오 로그인을 시작할 수 없습니다.');
     }
   };
 
-  const handleLogin = event => {
-    event.preventDefault();
-
-    if (!validateId(formData.loginId)) {
-      return;
+  // 이미 로그인된 경우 메인 페이지로 리다이렉트
+  useEffect(() => {
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+      const from = location.state?.from?.pathname || '/main';
+      navigate(from, { replace: true });
     }
-
-    // 백엔드 API 호출로 대체해야 하는 부분 
-    const tempToken = 'temp_jwt_token_' + Date.now();
-    localStorage.setItem('jwtToken', tempToken);
-    localStorage.setItem(
-      'userInfo',
-      JSON.stringify({
-        id: 'temp_id',
-        nickname: '게스트',
-        email: formData.loginId,
-        profileImage: '',
-      }),
-    );
-
-    if (formData.rememberMe) {
-      localStorage.setItem('rememberMe', 'true');
-    }
-
-    const from = location.state?.from?.pathname || '/main';
-    navigate(from);
-  };
-
-  const handleKakaoButtonClick = () => {
-    setIsLoginForm(true);
-  };
+  }, [location, navigate]);
 
   return (
     <div className="login-page">
-      {!isLoginForm ? (
-        <div className="login-message">
-          <h2>로그인 후 예약과</h2>
-          <h2>리뷰를 남겨보세요</h2>
-          <button
-            className="kakao-btn kakao-login-btn"
-            onClick={handleKakaoButtonClick}
-          >
-            카카오로 시작하기
-          </button>
-        </div>
-      ) : (
-        <div className="kakao-login-form">
-          <div className="kakao-logo">kakao</div>
-          <form onSubmit={handleLogin}>
-            <div className="input-group">
-              <input
-                type="text"
-                name="loginId"
-                value={formData.loginId}
-                onChange={handleInputChange}
-                placeholder="카카오계정 (이메일 또는 전화번호)"
-                required
-              />
-              {idError && <div className="error-message">{idError}</div>}
-            </div>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              placeholder="비밀번호"
-              required
-            />
-            <div className="login-checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  name="rememberMe"
-                  checked={formData.rememberMe}
-                  onChange={handleInputChange}
-                />{' '}
-                로그인 상태 유지
-              </label>
-            </div>
-            <button type="submit" className="kakao-btn kakao-submit-btn">
-              로그인
-            </button>
-          </form>
-        </div>
-      )}
+      {error && <div className="error-banner">{error}</div>}
+      <div className="login-message">
+        <h2>로그인 후 예약과</h2>
+        <h2>리뷰를 남겨보세요</h2>
+        <button
+          className="kakao-btn kakao-login-btn"
+          onClick={handleKakaoLogin}
+        >
+          카카오로 시작하기
+        </button>
+      </div>
     </div>
   );
 }

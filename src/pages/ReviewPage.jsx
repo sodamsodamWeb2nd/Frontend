@@ -1,53 +1,109 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import '../styles/components/CardLayout.css';
-import { generateDummyReviews } from '../constants/dummyData';
+import { reviewService } from '../service/reviewService';
 
 function ReviewPage() {
-  const [reviews, setReviews] = useState(generateDummyReviews());
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [reviewContent, setReviewContent] = useState('');
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [tags, setTags] = useState('');
 
-  const handleWriteClick = id => {
-    setReviews(
-      reviews.map(review =>
-        review.id === id ? { ...review, isWriting: true } : review,
-      ),
-    );
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
+  const fetchReviews = async () => {
+    try {
+      setLoading(true);
+      const data = await reviewService.getMyReviews();
+      setReviews(data);
+      setError(null);
+    } catch (error) {
+      console.error('리뷰 목록 로딩 실패:', error);
+      setError('리뷰 목록을 불러오는데 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSubmitReview = id => {
-    // TODO: 리뷰 등록 API 호출 구현
+  const handleWriteClick = review_id => {
     setReviews(
       reviews.map(review =>
-        review.id === id
-          ? { ...review, isReviewed: true, isWriting: false }
+        review.review_id === review_id
+          ? { ...review, isWriting: true }
           : review,
       ),
     );
   };
 
-  const handleCancelWrite = id => {
+  const handleSubmitReview = async review_id => {
+    try {
+      const reviewData = {
+        placeId: review_id,
+        content: reviewContent,
+        images: selectedImages,
+        tags: tags
+          .split(',')
+          .map(tag => tag.trim())
+          .filter(tag => tag),
+      };
+      await reviewService.createReview(reviewData);
+      await fetchReviews();
+      setReviewContent('');
+      setSelectedImages([]);
+      setTags('');
+    } catch (error) {
+      console.error('리뷰 등록 실패:', error);
+    }
+  };
+
+  const handleCancelWrite = review_id => {
     setReviews(
       reviews.map(review =>
-        review.id === id ? { ...review, isWriting: false } : review,
+        review.review_id === review_id
+          ? { ...review, isWriting: false }
+          : review,
       ),
     );
+    setReviewContent('');
+    setSelectedImages([]);
+    setTags('');
   };
+
+  const handleImageChange = e => {
+    const files = Array.from(e.target.files);
+    setSelectedImages(files);
+  };
+
+  if (loading) {
+    return <div className="loading">로딩 중...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
 
   return (
     <div className="card-page">
       <div className="card-list">
         {reviews.map(review => (
-          <div key={review.id} className="card-item">
+          <div key={review.review_id} className="card-item">
             <div className="card-main">
               <div className="card-content">
                 <div className="card-info">
-                  <h3 className="card-title">{review.storeName}</h3>
-                  <p className="card-date">{review.date}</p>
+                  <h3 className="card-title">{review.place_name}</h3>
+                  <p className="card-date">{review.created_at}</p>
                   <p className="card-description">{review.address}</p>
                 </div>
                 <div className="card-image">
-                  {review.imageUrl ? (
-                    <img src={review.imageUrl} alt={review.storeName} />
+                  {review.images?.[0]?.image_url ? (
+                    <img
+                      src={review.images[0].image_url}
+                      alt={review.place_name}
+                    />
                   ) : (
                     <div className="image-placeholder" />
                   )}
@@ -62,24 +118,49 @@ function ReviewPage() {
               ) : !review.isWriting ? (
                 <button
                   className="card-button"
-                  onClick={() => handleWriteClick(review.id)}
+                  onClick={() => handleWriteClick(review.review_id)}
                 >
                   리뷰 작성
                 </button>
               ) : (
-                <div className="button-group">
-                  <button
-                    className="card-button cancel"
-                    onClick={() => handleCancelWrite(review.id)}
-                  >
-                    취소
-                  </button>
-                  <button
-                    className="card-button confirm"
-                    onClick={() => handleSubmitReview(review.id)}
-                  >
-                    등록하기
-                  </button>
+                <div className="review-form">
+                  <textarea
+                    id="review-content"
+                    name="review-content"
+                    value={reviewContent}
+                    onChange={e => setReviewContent(e.target.value)}
+                    placeholder="리뷰를 작성해주세요"
+                  />
+                  <input
+                    id="review-tags"
+                    name="review-tags"
+                    type="text"
+                    value={tags}
+                    onChange={e => setTags(e.target.value)}
+                    placeholder="태그를 입력하세요 (쉼표로 구분)"
+                  />
+                  <input
+                    id="review-images"
+                    name="review-images"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleImageChange}
+                  />
+                  <div className="button-group">
+                    <button
+                      className="card-button cancel"
+                      onClick={() => handleCancelWrite(review.review_id)}
+                    >
+                      취소
+                    </button>
+                    <button
+                      className="card-button confirm"
+                      onClick={() => handleSubmitReview(review.review_id)}
+                    >
+                      등록하기
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

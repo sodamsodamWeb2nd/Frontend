@@ -1,57 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import '../styles/pages/MainPage.css';
 import '../styles/components/MainLayout.css';
 import HeartButton from '../components/common/HeartButton';
+import { placeService } from '../service/placeService';
 
 const MainPage = () => {
   const context = useOutletContext();
   const onPlaceSelect = context?.onPlaceSelect;
 
-  const [places, setPlaces] = useState([
-    {
-      id: 1,
-      name: '스타벅스',
-      description: '여기는 설명을 적는 곳입니다.',
-      reviewCount: 6,
-      averagePrice: 10000,
-      lat: 36.7794,
-      lng: 127.1378,
-      image: null,
-      isLiked: false,
-    },
-    {
-      id: 2,
-      name: '스타벅스',
-      description: '여기는 설명을 적는 곳입니다.',
-      reviewCount: 6,
-      averagePrice: 10000,
-      lat: 36.7794,
-      lng: 127.1378,
-      image: null,
-      isLiked: false,
-    },
-    {
-      id: 3,
-      name: '스타벅스',
-      description: '여기는 설명을 적는 곳입니다.',
-      reviewCount: 6,
-      averagePrice: 10000,
-      lat: 36.7794,
-      lng: 127.1378,
-      image: null,
-      isLiked: false,
-    },
-  ]);
-
+  const [places, setPlaces] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [sortOption, setSortOption] = useState('조회순');
 
-  const handleLikeToggle = placeId => {
-    setPlaces(
-      places.map(place =>
-        place.id === placeId ? { ...place, isLiked: !place.isLiked } : place,
-      ),
-    );
+  useEffect(() => {
+    fetchPlaces();
+  }, []);
+
+  const fetchPlaces = async () => {
+    try {
+      setLoading(true);
+      const data = await placeService.getPlaces();
+      setPlaces(data);
+      setError(null);
+    } catch (error) {
+      console.error('장소 목록 로딩 실패:', error);
+      setError('장소 목록을 불러오는데 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLikeToggle = async (placeId, e) => {
+    e.stopPropagation();
+    try {
+      await placeService.toggleLike(placeId);
+      setPlaces(
+        places.map(place =>
+          place.id === placeId ? { ...place, isLiked: !place.isLiked } : place,
+        ),
+      );
+    } catch (error) {
+      console.error('찜하기 처리 실패:', error);
+    }
   };
 
   const formatPrice = price => {
@@ -75,6 +67,14 @@ const MainPage = () => {
 
     setPlaces(sortedPlaces);
   };
+
+  if (loading) {
+    return <div className="loading">로딩 중...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
 
   return (
     <div className="main-page">
@@ -111,10 +111,7 @@ const MainPage = () => {
                 <h2 className="place-name">{place.name}</h2>
                 <HeartButton
                   isLiked={place.isLiked}
-                  onToggle={e => {
-                    e.stopPropagation();
-                    handleLikeToggle(place.id);
-                  }}
+                  onToggle={e => handleLikeToggle(place.id, e)}
                 />
               </div>
               <p className="place-description">{place.description}</p>

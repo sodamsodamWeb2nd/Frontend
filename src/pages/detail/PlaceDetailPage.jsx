@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { DayPicker } from 'react-day-picker';
 import { format } from 'date-fns';
@@ -6,82 +6,124 @@ import { ko } from 'date-fns/locale';
 import 'react-day-picker/dist/style.css';
 import '../../styles/pages/PlaceDetailPage.css';
 import HeartButton from '../../components/common/HeartButton';
-import { generateDummyReviews } from '../../constants/dummyData';
+import { placeService } from '../../service/placeService';
+import { reservationService } from '../../service/reservationService';
+import { reviewService } from '../../service/reviewService';
 
-const PlaceDetailPage = ({ place, onClose, onToggleLike }) => {
-  const [reviews] = useState(generateDummyReviews(3));
+const PlaceDetailPage = ({ place_id, onClose, onToggleLike }) => {
+  const [place, setPlace] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchPlaceDetail();
+    fetchReviews();
+  }, [place_id]);
+
+  const fetchPlaceDetail = async () => {
+    try {
+      setLoading(true);
+      const data = await placeService.getPlaceDetail(place_id);
+      setPlace(data);
+      setError(null);
+    } catch (error) {
+      console.error('장소 상세 정보 로딩 실패:', error);
+      setError('장소 상세 정보를 불러오는데 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchReviews = async () => {
+    try {
+      const data = await reviewService.getReviews({ place_id });
+      setReviews(data);
+    } catch (error) {
+      console.error('리뷰 목록 로딩 실패:', error);
+    }
+  };
 
   const handleReservation = () => {
     setShowCalendar(true);
   };
 
-  const handleDateSelect = date => {
+  const handleDateSelect = async date => {
     setSelectedDate(date);
+    try {
+      const times = await reservationService.getAvailableTime(
+        place_id,
+        format(date, 'yyyy-MM-dd'),
+      );
+      setAvailableTimes(times);
+    } catch (error) {
+      console.error('예약 가능 시간 조회 실패:', error);
+    }
   };
 
-  const handleConfirmBooking = () => {
-    if (selectedDate) {
-      console.log('예약 날짜:', format(selectedDate, 'yyyy-MM-dd'));
-      alert(
-        `${format(selectedDate, 'yyyy년 MM월 dd일', { locale: ko })}로 예약되었습니다.`,
-      );
-      setShowCalendar(false);
-      setSelectedDate(null);
+  const handleConfirmBooking = async () => {
+    if (selectedDate && selectedTime) {
+      try {
+        await reservationService.createReservation({
+          place_id,
+          date: format(selectedDate, 'yyyy-MM-dd'),
+          time: selectedTime,
+        });
+        alert(
+          `${format(selectedDate, 'yyyy년 MM월 dd일', { locale: ko })} ${selectedTime}에 예약되었습니다.`,
+        );
+        setShowCalendar(false);
+        setSelectedDate(null);
+        setSelectedTime(null);
+      } catch (error) {
+        console.error('예약 생성 실패:', error);
+        alert('예약에 실패했습니다. 다시 시도해주세요.');
+      }
     }
   };
 
   const handleCancelBooking = () => {
     setShowCalendar(false);
     setSelectedDate(null);
+    setSelectedTime(null);
   };
 
-  // 오늘 이전 날짜는 선택 불가
-  const disabledDays = { before: new Date() };
+  const handleLikeToggle = async () => {
+    try {
+      await placeService.toggleLike(place_id);
+      setPlace(prev => ({ ...prev, isLiked: !prev.isLiked }));
+      onToggleLike?.(place_id);
+    } catch (error) {
+      console.error('찜하기 처리 실패:', error);
+    }
+  };
 
-  const css = `
-    .rdp {
-      --rdp-cell-size: 40px;
-      --rdp-accent-color: #0051ff;
-      --rdp-background-color: #f5f5f5;
-      color: #333;
-      margin: 0;
-    }
-    .rdp-day_selected:not([disabled]) { 
-      font-weight: bold; 
-      background-color: var(--rdp-accent-color);
-      color: white !important;
-    }
-    .rdp-day_selected:hover:not([disabled]) { 
-      background-color: #0045db;
-      color: white;
-    }
-    .rdp-day_today { 
-      font-weight: bold;
-      color: var(--rdp-accent-color) !important;
-      background-color: transparent;
-    }
-    .rdp-button:hover:not([disabled]) {
-      background-color: var(--rdp-background-color);
-      color: var(--rdp-accent-color);
-    }
-    .rdp-day_outside {
-      opacity: 0.5;
-      color: #666;
-    }
-  `;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  const disabledDays = {
+    before: today,
+  };
+
+  if (loading) {
+    return <div className="loading">로딩 중...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
+
+  if (!place) {
+    return null;
+  }
 
   return (
     <div className="place-detail-page">
       <div className="place-image">
-        {place.image ? (
-          <img src={place.image} alt={place.name} />
-        ) : (
-          <div className="image-placeholder"></div>
-        )}
-
-        {/* 헤더 버튼들 */}
+        {place.image && <img src={place.image} alt={place.place_name} />}
         <div className="detail-header">
           <button className="back-button" onClick={onClose} />
           <button className="close-button" onClick={onClose} />
@@ -89,106 +131,123 @@ const PlaceDetailPage = ({ place, onClose, onToggleLike }) => {
       </div>
 
       <div className="detail-content">
-        {/* 장소 정보 */}
-        <div className="place-info">
-          <div className="place-header">
-            <h1 className="place-name">{place.name || '스타벅스'}</h1>
-            <HeartButton
-              isLiked={place.isLiked}
-              onToggle={() => onToggleLike && onToggleLike(place.id)}
-            />
+        <div className="place-info2">
+          <div className="place-header2">
+            <h1 className="place-name2">{place.place_name}</h1>
+            <HeartButton isLiked={place.isLiked} onToggle={handleLikeToggle} />
           </div>
-
-          <p className="place-description">
-            {place.description || '여기는 설명을 적는 곳입니다.'}
-          </p>
-
-          <div className="place-meta">
+          <p className="place-meta2">{place.description}</p>
+          <div className="place-meta2">
             <span>
-              리뷰 {place.reviewCount || 60}개 / 평균{' '}
-              {place.averagePrice?.toLocaleString() || '10,000'}원
+              리뷰 {place.reviewCount}개 / 평균{' '}
+              {place.averagePrice?.toLocaleString()}원
             </span>
           </div>
-
-          {/* 상세 정보 항목들 */}
-          <div className="info-list">
-            <div className="info-item">
-              <span className="info-label">주소</span>
+          <div className="place-info-list">
+            <div className="place-info-item">
+              <span className="place-info-label">주소</span>
+              <span>{place.address}</span>
             </div>
-            <div className="info-item">
-              <span className="info-label">영업시간</span>
+            <div className="place-info-item">
+              <span className="place-info-label">영업시간</span>
+              <span>{place.businessHours}</span>
             </div>
-            <div className="info-item">
-              <span className="info-label">전화번호</span>
+            <div className="place-info-item">
+              <span className="place-info-label">전화번호</span>
+              <span>{place.phoneNumber}</span>
             </div>
-            <div className="info-item">
-              <span className="info-label">주차</span>
+            <div className="place-info-item">
+              <span className="place-info-label">주차</span>
+              <span>{place.parking ? '가능' : '불가능'}</span>
             </div>
           </div>
         </div>
 
-        {!showCalendar && (
+        {!showCalendar ? (
           <>
-            {/* 예약하기 버튼 */}
-            <div className="action-section">
-              <button
-                className="reservation-button"
-                onClick={handleReservation}
-              >
-                예약하기
-              </button>
-            </div>
+            <button className="reservation-button" onClick={handleReservation}>
+              예약하기
+            </button>
 
-            {/* 리뷰 섹션 */}
             <div className="review-section scrollbar">
               <h3>리뷰</h3>
               <div className="review-images">
-                {[1, 2].map(index => (
-                  <div key={index} className="review-image-item">
-                    <div className="review-image-placeholder" />
-                  </div>
-                ))}
+                {reviews.slice(0, 2).map(review =>
+                  review.images?.map((image, index) => (
+                    <div
+                      key={`${review.review_id}-${index}`}
+                      className="review-image-item"
+                    >
+                      <img
+                        src={image.image_url}
+                        alt={`리뷰 이미지 ${index + 1}`}
+                      />
+                    </div>
+                  )),
+                )}
               </div>
               <div className="review-list">
                 {reviews.map(review => (
-                  <div key={review.id} className="review-item">
-                    <div className="review-content">
-                      <div className="user-icon" />
-                      <span className="user-id">user{review.id}302382</span>
-                      <p className="review-text">{review.content}</p>
+                  <div key={review.review_id} className="review-content">
+                    <div className="user-icon">
+                      {review.userProfileImage && (
+                        <img src={review.userProfileImage} alt="프로필" />
+                      )}
                     </div>
+                    <p className="user-id">{review.user_name}</p>
+                    <span>{review.content}</span>
+                    {review.tags && review.tags.length > 0 && (
+                      <div className="review-tags">
+                        {review.tags.map((tag, index) => (
+                          <span key={index} className="tag">
+                            #{tag.content}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
           </>
-        )}
-
-        {/* 달력 섹션 */}
-        {showCalendar && (
+        ) : (
           <div className="calendar-section scrollbar">
-            <style>{css}</style>
             <div className="calendar-header">
               <h3>날짜를 선택해 주세요</h3>
             </div>
-
             <div className="calendar-container">
               <DayPicker
+                id="reservation-date"
+                name="reservation-date"
                 mode="single"
                 selected={selectedDate}
                 onSelect={handleDateSelect}
                 disabled={disabledDays}
                 locale={ko}
+                showOutsideDays={false}
+                fixedWeeks={false}
+                classNames={{
+                  root: 'rdp',
+                  caption: 'rdp-caption',
+                  day: 'rdp-day',
+                  day_button: 'rdp-button',
+                  day_selected: 'rdp-day_selected',
+                  day_today: 'rdp-day_today',
+                  day_outside: 'rdp-day_outside',
+                  day_disabled: 'rdp-day_disabled',
+                  caption_label: 'rdp-caption_label',
+                  nav_button: 'rdp-nav_button',
+                  head_cell: 'rdp-head_cell',
+                  cell: 'rdp-cell',
+                }}
                 modifiers={{
                   today: new Date(),
                 }}
                 modifiersStyles={{
-                  today: { fontWeight: 'bold' },
-                }}
-                styles={{
-                  caption: { color: '#333' },
-                  head_cell: { color: '#666', fontWeight: '500' },
-                  button: { color: '#333' },
+                  selected: {
+                    backgroundColor: '#10b981',
+                    color: 'white',
+                  },
                 }}
               />
             </div>
@@ -200,7 +259,7 @@ const PlaceDetailPage = ({ place, onClose, onToggleLike }) => {
               <button
                 className="confirm-button"
                 onClick={handleConfirmBooking}
-                disabled={!selectedDate}
+                disabled={!selectedDate || !selectedTime}
               >
                 예약
               </button>
@@ -213,7 +272,7 @@ const PlaceDetailPage = ({ place, onClose, onToggleLike }) => {
 };
 
 PlaceDetailPage.propTypes = {
-  place: PropTypes.object,
+  place_id: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
   onToggleLike: PropTypes.func,
 };
