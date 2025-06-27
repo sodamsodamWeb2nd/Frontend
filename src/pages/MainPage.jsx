@@ -46,7 +46,12 @@ const MainPage = () => {
     }
   };
 
+  // ✅ 수정된 formatPrice 함수 - null, undefined 체크 추가
   const formatPrice = price => {
+    // price가 null, undefined이거나 숫자가 아닌 경우 기본값 반환
+    if (price == null || isNaN(price)) {
+      return '가격 정보 없음';
+    }
     return price.toLocaleString();
   };
 
@@ -56,10 +61,11 @@ const MainPage = () => {
 
     switch (option) {
       case '조회순':
-        sortedPlaces.sort((a, b) => b.reviewCount - a.reviewCount);
+        sortedPlaces.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
         break;
       case '가격순':
-        sortedPlaces.sort((a, b) => a.averagePrice - b.averagePrice);
+        // ✅ averagePrice가 없는 경우를 대비한 안전한 정렬
+        sortedPlaces.sort((a, b) => (a.averagePrice || 0) - (b.averagePrice || 0));
         break;
       default:
         break;
@@ -117,7 +123,7 @@ const MainPage = () => {
               <p className="place-description">{place.description}</p>
               <div className="place-meta">
                 <span className="review-info">
-                  리뷰 {place.reviewCount}개 | 평균{' '}
+                  리뷰 {place.reviewCount || 0}개 | 평균{' '}
                   {formatPrice(place.averagePrice)}원
                 </span>
               </div>
